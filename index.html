@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KBallet&Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f6f7;--white:#fff;--border:#e1e4e8;
+  --text:#1a1a1a;--sub:#767676;
+  --primary:#1a1a2e;--gold:#c9a84c;--blue:#4c6ef5;
+  --r:8px;
+}
+html{height:100%}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100%}
+
+/* ── HEADER ── */
+header{background:var(--primary);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.hd{max-width:1060px;margin:0 auto;padding:0 16px;height:54px;display:flex;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:8px;cursor:pointer;flex:1;text-decoration:none;border:none;background:none;color:#fff;font-family:inherit}
+.logo-img{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);background:#fff}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.2rem;letter-spacing:.05em}
+.logo-sub{font-size:9px;color:rgba(255,255,255,.5);letter-spacing:.15em;display:block}
+.hd-right{display:flex;align-items:center;gap:6px}
+.user-info{display:flex;align-items:center;gap:6px}
+.u-av{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.u-name{font-size:12px;color:rgba(255,255,255,.85);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-hd{padding:5px 10px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;border-radius:6px;cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap}
+.btn-hd:hover{background:rgba(255,255,255,.12)}
+.menu-btn{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;padding:4px 8px;line-height:1;flex-shrink:0}
+
+/* ── BODY LAYOUT ── */
+.app-body{display:flex;position:relative}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40}
+.sidebar-overlay.on{display:block}
+
+/* ── MAIN SCROLL AREA ── */
+.main-area{flex:1;min-width:0}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:210px;flex-shrink:0;
+  position:sticky;top:54px;
+  height:calc(100vh - 54px);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  background:#fff;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;gap:0;
+  align-self:flex-start;
+}
+.sb-section{background:#fff;border-bottom:1px solid var(--border);overflow:hidden}
+.sb-head{padding:8px 14px;font-size:10px;font-weight:700;color:var(--sub);letter-spacing:.12em;text-transform:uppercase;background:#fafbfc;border-bottom:1px solid var(--border)}
+.cat-list{list-style:none}
+.cat-list li a{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:9px 14px;font-size:13px;color:var(--text);
+  border-bottom:1px solid #f0f0f0;cursor:pointer;
+  text-decoration:none;transition:background .1s;
+  user-select:none;
+}
+.cat-list li:last-child a{border-bottom:none}
+.cat-list li a:hover{background:#f5f6f7}
+.cat-list li a.active{background:#eef2ff;color:var(--blue);font-weight:700;border-right:3px solid var(--blue)}
+.cat-count{font-size:10px;color:var(--sub);background:#f0f0f0;padding:1px 6px;border-radius:8px;flex-shrink:0}
+
+/* 발레레벨 아코디언 */
+.cat-group-hd{cursor:pointer;font-weight:700;background:#f8f9ff !important;color:var(--primary) !important}
+.arrow{transition:transform .2s;font-size:11px;margin-left:4px}
+.arrow.open{transform:rotate(180deg)}
+.sub-cat{display:none;list-style:none;max-height:0;overflow:hidden;transition:max-height .3s ease}
+.sub-cat.open{display:block;max-height:400px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sub-cat li a{padding-left:26px !important;font-size:12px !important;color:var(--sub) !important;background:#fafbff}
+.sub-cat li a:hover{color:var(--text) !important;background:#f0f2ff !important}
+.sub-cat li a.active{color:var(--blue) !important;font-weight:700 !important}
+
+/* 사이드바 하단 카드 */
+.sb-bottom{padding:10px}
+.concour-card{padding:12px;background:linear-gradient(135deg,#1a1a2e,#2d4a6e);cursor:pointer;border-radius:var(--r);margin-bottom:8px}
+.concour-card:hover{opacity:.9}
+.cc-title{font-weight:700;font-size:12px;color:#fff;margin-bottom:3px}
+.cc-sub{font-size:10px;color:var(--gold)}
+.sns-row{display:flex;gap:6px}
+.sns-btn{display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 0;border-radius:6px;text-decoration:none;font-size:11px;font-weight:700;flex:1;color:#fff;transition:opacity .2s}
+.sns-btn:hover{opacity:.85}
+.sns-ig{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.sns-yt{background:#f00}
+
+/* ── CONTENT WRAPPER ── */
+.content-wrap{max-width:860px;margin:0;padding:14px 16px}
+
+/* ── HOME ── */
+.hero{background:linear-gradient(135deg,#1a1a2e,#2d3a5e,#1a2a4e);padding:40px 20px 32px;text-align:center;color:#fff;margin-bottom:0}
+.hero-logo{width:200px;height:200px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);display:block;margin:0 auto 18px;background:#fff;box-shadow:0 0 0 8px rgba(201,168,76,.18),0 10px 40px rgba(0,0,0,.5)}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;letter-spacing:.1em;margin-bottom:6px}
+.hero-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:22px}
+.search-wrap{display:flex;max-width:480px;margin:0 auto;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.search-inp{flex:1;padding:12px 18px;border:none;outline:none;font-size:14px;font-family:inherit}
+.search-btn{padding:10px 20px;background:var(--gold);color:#1a1a2e;border:none;cursor:pointer;font-weight:700;font-size:13px;font-family:inherit}
+
+/* 쇼트컷 */
+.shortcuts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.sc{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 8px;text-align:center;cursor:pointer;transition:box-shadow .2s,transform .15s}
+.sc:hover{box-shadow:0 4px 14px rgba(0,0,0,.1);transform:translateY(-2px)}
+.sc-icon{font-size:26px;margin-bottom:7px}
+.sc-label{font-size:12px;font-weight:700;color:var(--primary)}
+
+/* 홈 그리드 */
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.home-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;transition:box-shadow .2s}
+.home-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.1)}
+.hc-title{font-weight:700;font-size:13px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.hp-item{padding:5px 0;border-bottom:1px solid #f5f5f5;font-size:12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.hp-item:last-child{border-bottom:none}
+.hp-item:hover{color:var(--blue)}
+.hp-t{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hp-d{font-size:10px;color:var(--sub);flex-shrink:0}
+.home-empty{font-size:12px;color:#aaa;padding:8px 0}
+
+/* 발레레벨 썸네일 홈 */
+.thumb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.thumb-item{cursor:pointer;border-radius:6px;overflow:hidden;transition:opacity .2s}
+.thumb-item:hover{opacity:.85}
+.thumb-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#111}
+.thumb-ph{width:100%;aspect-ratio:16/9;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold)}
+.thumb-t{font-size:11px;padding:4px 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* 발레소식 */
+.news-item{padding:8px 0;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.news-item:last-child{border-bottom:none}
+.news-item:hover .news-title{color:var(--blue)}
+.news-title{font-size:12px;font-weight:600;margin-bottom:3px;line-height:1.4}
+.news-source{font-size:10px;color:var(--sub)}
+.news-loading{font-size:12px;color:#aaa;padding:8px 0}
+
+/* ── BOARD ── */
+.board-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.board-top{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.board-title-txt{font-size:15px;font-weight:700}
+.board-sub-txt{font-size:12px;color:var(--sub);margin-left:6px}
+.post-item{padding:12px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;transition:background .1s}
+.post-item:last-child{border-bottom:none}
+.post-item:hover{background:#fafbfc}
+.post-item.notice{background:#fffbf0}
+.post-top{display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap}
+.post-title{font-size:13px;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmt-cnt{font-size:12px;color:var(--blue);font-weight:700;flex-shrink:0}
+.post-meta{font-size:11px;color:var(--sub);display:flex;gap:10px}
+.badge{padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700;white-space:nowrap}
+.b-notice{background:#fff0f0;color:#c92a2a}
+.b-free{background:#f1f3f5;color:#495057}
+.b-q{background:#e7f5ff;color:#1971c2}
+.b-music{background:#f3d9fa;color:#9c36b5}
+.b-news{background:#e3fafc;color:#0c8599}
+.b-job{background:#fff3bf;color:#e67700}
+.b-lv0{background:#f8f9fa;color:#868e96;border:1px solid #dee2e6}
+.b-lv05{background:#fff9db;color:#e67700}
+.b-lv1{background:#fff3bf;color:#d9480f}
+.b-lv2{background:#ffe8cc;color:#c92a2a}
+.b-lv3{background:#ffd8a8;color:#862e9c}
+.b-lv4{background:#ffc9c9;color:#5c1a8a}
+.empty-msg{padding:48px;text-align:center;color:var(--sub);font-size:13px}
+.btn-primary{background:var(--primary);color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-primary:hover{background:#2d3a5e}
+.pager{display:flex;justify-content:center;gap:3px;padding:10px}
+.pg-btn{width:30px;height:30px;border:1px solid var(--border);background:#fff;color:var(--text);border-radius:6px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center}
+.pg-btn:hover{background:#f1f3f5}
+.pg-btn.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* 발레레벨 영상 그리드 */
+.video-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
+.v-card{cursor:pointer;border-radius:8px;overflow:hidden;background:#fff;border:1px solid var(--border);transition:box-shadow .2s}
+.v-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.v-thumb-wrap{position:relative;aspect-ratio:16/9;background:#111;overflow:hidden}
+.v-thumb{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}
+.v-card:hover .v-thumb{transform:scale(1.03)}
+.v-thumb-empty{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;background:#1a1a2e;color:var(--gold)}
+.v-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:rgba(0,0,0,.7);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;padding-left:3px}
+.v-info{padding:10px 12px}
+.v-title{font-size:13px;font-weight:700;margin-bottom:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.v-meta{font-size:11px;color:var(--sub)}
+
+/* ── DETAIL ── */
+.post-detail{display:none}
+.post-detail.on{display:block}
+.board-view.hidden{display:none}
+.back-btn{display:inline-flex;align-items:center;gap:4px;padding:8px 0;font-size:13px;color:var(--sub);cursor:pointer;background:none;border:none;font-family:inherit;margin-bottom:10px}
+.back-btn:hover{color:var(--text)}
+.detail-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:10px}
+.detail-hd{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.detail-title{font-size:18px;font-weight:700;margin:8px 0;line-height:1.4}
+.detail-meta{font-size:12px;color:var(--sub);display:flex;gap:12px;flex-wrap:wrap}
+.detail-body{font-size:14px;line-height:1.9;color:#333;word-break:break-word}
+.yt-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:16px 0}
+.yt-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%}
+.detail-actions{margin-top:16px;display:flex;justify-content:center;gap:8px}
+.like-btn{display:flex;align-items:center;gap:6px;padding:8px 20px;border:1px solid #ffa8a8;background:#fff;color:#e03131;border-radius:20px;cursor:pointer;font-size:13px;font-family:inherit}
+.like-btn.liked{background:#fff0f0}
+.btn-del{padding:8px 16px;border:1px solid #ffc9c9;background:#fff;color:#e03131;border-radius:20px;cursor:pointer;font-size:13px;font-family:inherit}
+.cmt-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.cmt-title{font-size:14px;font-weight:700;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.cmt-item{padding:10px 0;border-bottom:1px solid #f5f5f5}
+.cmt-item:last-of-type{border-bottom:none}
+.cmt-hd{display:flex;justify-content:space-between;margin-bottom:4px}
+.cmt-author{font-size:13px;font-weight:700;color:var(--primary)}
+.cmt-date{font-size:11px;color:var(--sub);display:flex;align-items:center;gap:6px}
+.cmt-text{font-size:13px;line-height:1.6}
+.no-cmt{font-size:13px;color:var(--sub)}
+.cmt-form{margin-top:14px;border-top:1px solid var(--border);padding-top:12px}
+.cmt-name{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;margin-bottom:8px;font-family:inherit;outline:none}
+.cmt-name:focus{border-color:var(--primary)}
+.cmt-row{display:flex;gap:8px}
+.cmt-inp{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;resize:none;min-height:58px;font-family:inherit;outline:none}
+.cmt-inp:focus{border-color:var(--primary)}
+.btn-del-cmt{background:none;border:none;color:#e03131;font-size:11px;cursor:pointer}
+.login-hint{margin-top:8px;font-size:12px;color:var(--sub)}
+.btn-li{background:none;border:none;color:var(--blue);font-size:12px;cursor:pointer;text-decoration:underline;font-family:inherit}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:16px}
+.overlay.on{display:flex}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.m-head{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:1}
+.m-title{font-size:15px;font-weight:700}
+.m-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--sub)}
+.m-body{padding:16px 18px}
+.m-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:#fff}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:11px;font-weight:700;color:var(--sub);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.fc{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;outline:none}
+.fc:focus{border-color:var(--primary)}
+textarea.fc{min-height:120px;resize:vertical}
+.btn-cancel{padding:8px 14px;background:#f1f3f5;color:var(--text);border:none;border-radius:6px;cursor:pointer;font-size:13px;font-family:inherit}
+.li-box{padding:12px;background:#eef2ff;border-radius:8px;font-size:13px;color:var(--blue);text-align:center}
+
+/* ADMIN */
+.admin-panel{display:none;position:fixed;top:0;right:0;width:380px;height:100vh;background:#fff;border-left:1px solid var(--border);box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:300;flex-direction:column;overflow:hidden}
+.admin-panel.on{display:flex}
+.adm-hd{padding:14px 16px;background:var(--primary);color:#fff;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;font-weight:700}
+.adm-body{flex:1;overflow-y:auto;padding:14px}
+.adm-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.adm-stat{background:#f8f9fa;border-radius:8px;padding:10px;text-align:center}
+.adm-num{font-size:22px;font-weight:800;color:var(--primary)}
+.adm-lbl{font-size:10px;color:var(--sub);margin-top:2px}
+.adm-sec{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.1em;margin:14px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.adm-post{background:#f8f9fa;border-radius:6px;padding:10px;margin-bottom:6px}
+.btn-sw{padding:4px 10px;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:5px;cursor:pointer;font-size:11px;font-family:inherit}
+.btn-dsm{background:none;border:1px solid #ffc9c9;color:#e03131;font-size:11px;padding:2px 8px;border-radius:4px;cursor:pointer}
+
+/* FOOTER */
+footer{background:var(--primary);color:rgba(255,255,255,.6);padding:24px 16px;text-align:center;flex-shrink:0}
+.ft-sns{display:flex;justify-content:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.ft-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:24px;text-decoration:none;font-size:13px;font-weight:700;color:#fff;transition:opacity .2s}
+.ft-btn:hover{opacity:.85}
+.ft-ig{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.ft-yt{background:#f00}
+.ft-copy{font-size:11px;color:rgba(255,255,255,.3)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* MOBILE */
+@media(max-width:768px){
+  .menu-btn{display:block}
+  .sidebar{left:-240px;top:54px;width:240px}
+  .sidebar.on{left:0}
+  .content-wrap{padding:10px}
+  .shortcuts{grid-template-columns:repeat(2,1fr)}
+  .home-grid{grid-template-columns:1fr}
+  .video-grid{grid-template-columns:1fr}
+  .admin-panel{width:100%}
+  .hero{padding:32px 16px 24px}
+  .hero-logo{width:140px;height:140px}
+  .hero-title{font-size:1.5rem}
+  .ft-sns{flex-direction:column;align-items:center}
+  .u-name{display:none}
+}
+@media(min-width:769px){
+  .sidebar-overlay{display:none!important}
+  html,body{overflow:auto}
+  .app-body{overflow:visible}
+  .main-area{overflow:visible}
+  .sidebar{position:sticky;top:0;height:calc(100vh - 54px);flex-shrink:0}
+  body{display:block}
+  header{position:sticky;top:0}
+  .content-wrap{padding:14px 16px 14px 226px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hd">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <button class="logo" id="logoBtn">
+      <img class="logo-img" src="logo.png" alt="K" onerror="this.style.display='none'">
+      <div>
+        <span class="logo-text">KBallet&Co.</span>
+        <span class="logo-sub">Korean Ballet Community</span>
+      </div>
+    </button>
+    <div class="hd-right">
+      <div class="user-info" id="userInfo" style="display:none"></div>
+      <button class="btn-hd" id="authBtn">로그인</button>
+      <button class="btn-hd" id="writeBtn">✦ 글쓰기</button>
+      <button class="btn-hd" id="adminBtn">🔐</button>
+    </div>
+  </div>
+</header>
+
+<div class="app-body">
+  <!-- 모바일 오버레이 -->
+  <div class="sidebar-overlay" id="sbOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-section">
+      <div class="sb-head">카테고리</div>
+      <ul class="cat-list" id="catList"></ul>
+    </div>
+    <div class="sb-bottom">
+      <div class="concour-card" id="concourSbBtn">
+        <div class="cc-title">🩰 콩쿨 참가 신청</div>
+        <div class="cc-sub">신청하기 →</div>
+      </div>
+      <div class="sns-row">
+        <a class="sns-btn sns-ig" href="https://www.instagram.com/kballettv?igsh=MXFmdmEwZ3YyanlvZw%3D%3D&utm_source=qr" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          IG
+        </a>
+        <a class="sns-btn sns-yt" href="https://youtube.com/@kballettv?si=J5QZMwSEuFvDEMUF" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          YT
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN SCROLL -->
+  <div class="main-area" id="mainArea">
+
+    <!-- HOME -->
+    <div id="homeView">
+      <div class="hero">
+        <img class="hero-logo" src="logo.png" alt="KBallet&Co." onerror="this.style.display='none'">
+        <div class="hero-title">KBallet&Co.</div>
+        <div class="hero-sub">발레를 사랑하는 모든 분들의 커뮤니티</div>
+        <div class="search-wrap">
+          <input class="search-inp" id="searchInp" placeholder="통합 검색..." onkeydown="if(event.key==='Enter')doSearch()">
+          <button class="search-btn" onclick="doSearch()">검색</button>
+        </div>
+      </div>
+      <div class="content-wrap">
+        <div class="shortcuts">
+          <div class="sc" onclick="filterCat('음악')"><div class="sc-icon">🎵</div><div class="sc-label">발레음악공유</div></div>
+          <div class="sc" onclick="showConcour()"><div class="sc-icon">🩰</div><div class="sc-label">콩쿨참가신청</div></div>
+          <div class="sc" onclick="filterCat('레벨1')"><div class="sc-icon">⭐</div><div class="sc-label">발레레벨</div></div>
+          <div class="sc" onclick="filterCat('소식')"><div class="sc-icon">🌍</div><div class="sc-label">발레소식</div></div>
+        </div>
+        <div class="home-grid">
+          <div class="home-card" onclick="filterCat('음악')">
+            <div class="hc-title">🎵 발레음악공유</div>
+            <div id="h-음악"></div>
+          </div>
+          <div class="home-card" onclick="filterCat('소식')">
+            <div class="hc-title">🌍 발레소식</div>
+            <div id="h-소식"></div>
+          </div>
+          <div class="home-card" onclick="filterCat('레벨1')" style="grid-column:1/-1">
+            <div class="hc-title">🩰 발레레벨 — 최근 영상</div>
+            <div id="h-레벨"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOARD -->
+    <div id="boardView" style="display:none">
+      <div class="content-wrap">
+        <div class="board-card">
+          <div class="board-top">
+            <div>
+              <span class="board-title-txt" id="boardTitle">전체 글</span>
+              <span class="board-sub-txt" id="boardSub"></span>
+            </div>
+            <button class="btn-primary" id="writeBtn2">+ 글쓰기</button>
+          </div>
+          <div id="postList"><div class="empty-msg">불러오는 중... 🩰</div></div>
+          <div class="pager" id="pager"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAIL -->
+    <div id="detailView" style="display:none">
+      <div class="content-wrap">
+        <button class="back-btn" id="backBtn">← 목록으로</button>
+        <div class="detail-card" id="detailBox"></div>
+        <div class="cmt-card" id="cmtBox"></div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="ft-sns">
+        <a class="ft-btn ft-ig" href="https://www.instagram.com/kballettv?igsh=MXFmdmEwZ3YyanlvZw%3D%3D&utm_source=qr" target="_blank">📸 Instagram @kballettv</a>
+        <a class="ft-btn ft-yt" href="https://youtube.com/@kballettv?si=J5QZMwSEuFvDEMUF" target="_blank">▶ YouTube @kballettv</a>
+      </div>
+      <div class="ft-copy">© 2026 KBallet&Co. All rights reserved.</div>
+    </footer>
+  </div>
+</div>
+
+<!-- 글쓰기 모달 -->
+<div class="overlay" id="writeModal">
+  <div class="modal">
+    <div class="m-head"><span class="m-title">✦ 새 글 작성</span><button class="m-close" id="writeClose">✕</button></div>
+    <div class="m-body">
+      <div class="fg"><label class="fl">카테고리</label>
+        <select class="fc" id="newCat">
+          <option value="자유">💬 자유게시판 (로그인 불필요)</option>
+          <option value="질문">❓ 질문하기</option>
+          <option value="음악">🎵 발레음악공유</option>
+          <option value="소식">🌍 발레소식</option>
+          <option value="레벨0">⬜ 발레레벨 — Lv.0</option>
+          <option value="레벨0.5">🔲 발레레벨 — Lv.0.5</option>
+          <option value="레벨1">⭐ 발레레벨 — Lv.1</option>
+          <option value="레벨2">⭐⭐ 발레레벨 — Lv.2</option>
+          <option value="레벨3">⭐⭐⭐ 발레레벨 — Lv.3</option>
+          <option value="레벨4">👑 발레레벨 — Lv.4</option>
+          <option value="구인구직">💼 구인구직</option>
+          <option value="공지">📌 공지사항</option>
+        </select>
+      </div>
+      <div class="fg" id="nickWrap"><label class="fl">닉네임</label><input class="fc" id="newNick" placeholder="닉네임 입력"></div>
+      <div class="fg" id="loginNotice" style="display:none"><div class="li-box">🔐 이 게시판은 로그인이 필요해요.<br><button class="btn-li" id="goLoginBtn">지금 로그인하기 →</button></div></div>
+      <div class="fg"><label class="fl">제목</label><input class="fc" id="newTitle" placeholder="제목을 입력해주세요"></div>
+      <div class="fg"><label class="fl">내용 (유튜브 링크 자동 재생)</label><textarea class="fc" id="newContent" placeholder="내용을 입력하세요..."></textarea></div>
+    </div>
+    <div class="m-foot"><button class="btn-cancel" id="writeCancelBtn">취소</button><button class="btn-primary" id="submitBtn">게시하기</button></div>
+  </div>
+</div>
+
+<!-- 로그인 모달 -->
+<div class="overlay" id="loginModal">
+  <div class="modal" style="max-width:340px">
+    <div class="m-head"><span class="m-title">👤 로그인</span><button class="m-close" id="loginClose">✕</button></div>
+    <div class="m-body" style="text-align:center;padding:28px 20px">
+      <img src="logo.png" style="width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);margin-bottom:16px;background:#fff" onerror="this.style.display='none'">
+      <div style="font-size:15px;font-weight:700;margin-bottom:6px">KBallet&Co.</div>
+      <div style="font-size:13px;color:var(--sub);margin-bottom:24px">로그인하고 더 많은 기능을 이용하세요</div>
+      <button id="googleLoginBtn" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px 20px;background:#fff;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;font-family:inherit;box-shadow:0 1px 4px rgba(0,0,0,.1)">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google 계정으로 로그인
+      </button>
+      <div style="margin-top:14px;font-size:12px;color:#aaa">자유게시판은 로그인 없이 이용 가능해요</div>
+    </div>
+  </div>
+</div>
+
+<!-- 콩쿨 모달 -->
+<div class="overlay" id="concourModal">
+  <div class="modal" style="max-width:420px">
+    <div class="m-head"><span class="m-title">🩰 콩쿨 참가 신청</span><button class="m-close" id="concourClose">✕</button></div>
+    <div class="m-body" style="text-align:center;padding:32px 20px">
+      <div style="font-size:48px;margin-bottom:16px">🩰</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px">2026 KBallet 콩쿨</div>
+      <div style="font-size:13px;color:var(--sub);margin-bottom:24px;line-height:1.7">아래 버튼을 클릭하여<br>참가 신청서를 작성해주세요.</div>
+      <a href="https://tally.so/r/Pdv9jd" target="_blank" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#1a1a2e,#415a77);color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px">🩰 참가 신청서 작성하기 →</a>
+    </div>
+  </div>
+</div>
+
+<!-- 관리자 모달 -->
+<div class="overlay" id="adminModal">
+  <div class="modal" style="max-width:320px">
+    <div class="m-head"><span class="m-title">🔐 관리자 로그인</span><button class="m-close" id="adminClose">✕</button></div>
+    <div class="m-body">
+      <div class="fg"><label class="fl">비밀번호</label><input type="password" class="fc" id="adminPw" placeholder="비밀번호 입력"></div>
+    </div>
+    <div class="m-foot"><button class="btn-cancel" id="adminCancelBtn">취소</button><button class="btn-primary" id="adminLoginBtn">로그인</button></div>
+  </div>
+</div>
+
+<div class="admin-panel" id="adminPanel">
+  <div class="adm-hd"><span>🔐 관리자 패널</span><div style="display:flex;gap:8px"><button class="btn-sw" id="adminLogoutBtn">로그아웃</button><button class="btn-sw" id="adminCloseBtn">✕</button></div></div>
+  <div class="adm-body" id="adminBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, increment, orderBy, query, serverTimestamp, onSnapshot, where, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const cfg={apiKey:"AIzaSyCHT0gtWIcDDaGqqWjzsWR8qDQ9yX8hRfc",authDomain:"kballetco.firebaseapp.com",projectId:"kballetco",storageBucket:"kballetco.firebasestorage.app",messagingSenderId:"542211196190",appId:"1:542211196190:web:c81af81a6e8f9a48c3350f"};
+const app=initializeApp(cfg);
+const db=getFirestore(app);
+const auth=getAuth(app);
+const prov=new GoogleAuthProvider();
+
+const ADMIN_PW="kballet2025!";
+const FREE_CATS=['자유'];
+const LV_CATS=['레벨0','레벨0.5','레벨1','레벨2','레벨3','레벨4'];
+// ⭐ NewsAPI 키 여기에 입력
+const NEWS_API_KEY="745a2d4846ea443655c9f0b0b0b3a107";
+
+const CATS=[
+  {id:'전체',label:'전체 글',icon:'🏠'},
+  {id:'공지',label:'공지사항',icon:'📌'},
+  {id:'자유',label:'자유게시판',icon:'💬'},
+  {id:'질문',label:'질문하기',icon:'❓'},
+  {id:'음악',label:'발레음악공유',icon:'🎵'},
+  {id:'소식',label:'발레소식',icon:'🌍'},
+  {id:'구인구직',label:'구인구직',icon:'💼'},
+  {id:'발레레벨',label:'발레레벨',icon:'🩰',sub:[
+    {id:'레벨0',label:'Lv.0',icon:'⬜'},
+    {id:'레벨0.5',label:'Lv.0.5',icon:'🔲'},
+    {id:'레벨1',label:'Lv.1',icon:'⭐'},
+    {id:'레벨2',label:'Lv.2',icon:'⭐⭐'},
+    {id:'레벨3',label:'Lv.3',icon:'⭐⭐⭐'},
+    {id:'레벨4',label:'Lv.4',icon:'👑'},
+  ]},
+];
+
+const BADGE_MAP={
+  '공지':'b-notice','자유':'b-free','질문':'b-q',
+  '음악':'b-music','소식':'b-news','구인구직':'b-job',
+  '레벨0':'b-lv0','레벨0.5':'b-lv05',
+  '레벨1':'b-lv1','레벨2':'b-lv2','레벨3':'b-lv3','레벨4':'b-lv4',
+};
+
+let allPosts=[],curCat='전체',curPage=1,curPostId=null;
+let isAdmin=false,curUser=null,lvOpen=false;
+
+// ── DOM refs ──
+const $ = id => document.getElementById(id);
+const homeView=$('homeView'), boardView=$('boardView'), detailView=$('detailView');
+const sidebar=$('sidebar'), sbOverlay=$('sbOverlay'), mainArea=$('mainArea');
+
+// ── Init ──
+renderCatList();
+loadPosts();
+loadHomeCards();
+loadNews();
+
+onAuthStateChanged(auth, u=>{ curUser=u; updateAuthUI(); });
+
+// overlay click-outside
+['writeModal','loginModal','concourModal','adminModal'].forEach(id=>{
+  $(id).addEventListener('click',e=>{ if(e.target===$(id)) $(id).classList.remove('on'); });
+});
+
+// ── Sidebar toggle (mobile) ──
+// ── 햄버거 메뉴 ──
+function closeSb(){
+  sidebar.classList.remove('on');
+  sbOverlay.classList.remove('on');
+}
+function openSb(){
+  sidebar.classList.add('on');
+  sbOverlay.classList.add('on');
+}
+$('menuBtn').addEventListener('click', function(){
+  if(sidebar.classList.contains('on')){ closeSb(); } else { openSb(); }
+});
+sbOverlay.addEventListener('click', closeSb);
+
+// prevent main scroll when touching sidebar
+sidebar.addEventListener('touchmove',e=>e.stopPropagation(),{passive:true});
+
+// ── Auth ──
+function updateAuthUI(){
+  const btn=$('authBtn'), info=$('userInfo');
+  if(curUser){
+    btn.textContent='로그아웃';
+    btn.onclick=()=>signOut(auth).then(()=>toast('로그아웃됐어요'));
+    info.innerHTML=`<img src="${curUser.photoURL||''}" class="u-av" onerror="this.style.display='none'"><span class="u-name">${curUser.displayName||'사용자'}</span>`;
+    info.style.display='flex';
+  } else {
+    btn.textContent='로그인';
+    btn.onclick=()=>$('loginModal').classList.add('on');
+    info.style.display='none';
+  }
+}
+$('googleLoginBtn').addEventListener('click',()=>{
+  signInWithPopup(auth,prov).then(()=>{ $('loginModal').classList.remove('on'); toast('로그인됐어요 👋'); }).catch(()=>toast('로그인 실패'));
+});
+$('loginClose').addEventListener('click',()=>$('loginModal').classList.remove('on'));
+
+// ── Sidebar render ──
+function renderCatList(){
+  $('catList').innerHTML=CATS.map(c=>{
+    if(c.sub) return `
+      <li><a class="cat-group-hd" data-group="발레레벨">
+        <span>${c.icon} ${c.label}</span><span class="arrow" id="lv-arrow">▾</span>
+      </a></li>
+      <ul class="sub-cat" id="sub-발레레벨">
+        ${c.sub.map(s=>`<li><a data-cat="${s.id}"><span>${s.icon} ${s.label}</span><span class="cat-count" id="cnt-${s.id}">0</span></a></li>`).join('')}
+      </ul>`;
+    return `<li><a data-cat="${c.id}" class="${c.id==='전체'?'active':''}">
+      <span>${c.icon} ${c.label}</span>
+      <span class="cat-count" id="cnt-${c.id}">0</span>
+    </a></li>`;
+  }).join('');
+
+  // 카테고리 클릭
+  $('catList').addEventListener('click',e=>{
+    const a=e.target.closest('a');
+    if(!a) return;
+    const cat=a.dataset.cat;
+    const grp=a.dataset.group;
+    if(grp==='발레레벨'){
+      lvOpen=!lvOpen;
+      $('sub-발레레벨').classList.toggle('open',lvOpen);
+      $('lv-arrow').classList.toggle('open',lvOpen);
+      return;
+    }
+    if(cat){ filterCat(cat); closeSb(); }
+  });
+}
+
+// ── Category filter ──
+window.filterCat=function(cat){
+  curCat=cat; curPage=1;
+  document.querySelectorAll('#catList a[data-cat]').forEach(a=>a.classList.toggle('active',a.dataset.cat===cat));
+  closeSb();
+  showBoard();
+}
+
+function showHome(){ homeView.style.display='block'; boardView.style.display='none'; detailView.style.display='none'; window.scrollTo(0,0); }
+function showBoard(){ homeView.style.display='none'; boardView.style.display='block'; detailView.style.display='none'; renderBoard(); window.scrollTo(0,0); }
+function showDetail(){ homeView.style.display='none'; boardView.style.display='none'; detailView.style.display='block'; window.scrollTo(0,0); }
+
+$('logoBtn').addEventListener('click',showHome);
+$('backBtn').addEventListener('click',()=>showBoard());
+
+// ── Posts ──
+function loadPosts(){
+  onSnapshot(query(collection(db,'posts'),orderBy('createdAt','desc')),snap=>{
+    allPosts=snap.docs.map(d=>({id:d.id,...d.data()}));
+    updateCounts();
+    if(boardView.style.display!=='none') renderBoard();
+    if(detailView.style.display!=='none'&&curPostId){
+      const p=allPosts.find(x=>x.id===curPostId);
+      if(p) renderDetail(p);
+    }
+  });
+}
+
+function getFiltered(){ return curCat==='전체'?allPosts:allPosts.filter(p=>p.cat===curCat); }
+
+function badge(cat){ return `<span class="badge ${BADGE_MAP[cat]||'b-free'}">${cat}</span>`; }
+
+function ytId(text){ const m=(text||'').match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/); return m?m[1]:null; }
+
+function renderBoard(){
+  const fil=getFiltered();
+  const catObj=CATS.find(c=>c.id===curCat)||CATS.flatMap(c=>c.sub||[]).find(c=>c.id===curCat)||{label:'전체 글',icon:'🏠'};
+  $('boardTitle').textContent=`${catObj.icon} ${catObj.label}`;
+  $('boardSub').textContent=`총 ${fil.length}개`;
+  const start=(curPage-1)*10, paged=fil.slice(start,start+10);
+  const isLv=LV_CATS.includes(curCat);
+
+  if(!paged.length){ $('postList').innerHTML='<div class="empty-msg">아직 게시글이 없어요 🩰</div>'; $('pager').innerHTML=''; return; }
+
+  if(isLv){
+    $('postList').innerHTML=`<div class="video-grid">${paged.map(p=>{
+      const id=ytId(p.content||'');
+      const thumb=id?`https://img.youtube.com/vi/${id}/mqdefault.jpg`:'';
+      return `<div class="v-card" onclick="openPost('${p.id}')">
+        <div class="v-thumb-wrap">${thumb?`<img class="v-thumb" src="${thumb}">`:`<div class="v-thumb-empty">🩰</div>`}<div class="v-play">▶</div></div>
+        <div class="v-info"><div class="v-title">${p.title}</div><div class="v-meta">${p.author||'익명'} · ${fmtDate(p.createdAt)}</div></div>
+      </div>`;
+    }).join('')}</div>`;
+  } else {
+    $('postList').innerHTML=paged.map(p=>`
+      <div class="post-item ${p.cat==='공지'?'notice':''}" onclick="openPost('${p.id}')">
+        <div class="post-top">${badge(p.cat)}<span class="post-title">${p.title}</span>${p.commentCount>0?`<span class="cmt-cnt">[${p.commentCount}]</span>`:''}</div>
+        <div class="post-meta"><span>${p.author||'익명'}</span><span>${fmtDate(p.createdAt)}</span><span>👁${p.views||0}</span><span>♥${p.likes||0}</span></div>
+      </div>`).join('');
+  }
+  renderPager(fil.length);
+}
+
+function renderPager(total){
+  const pages=Math.ceil(total/10);
+  if(pages<=1){$('pager').innerHTML='';return;}
+  let h=`<button class="pg-btn" onclick="goPage(${curPage-1})">‹</button>`;
+  for(let i=1;i<=pages;i++) h+=`<button class="pg-btn ${i===curPage?'on':''}" onclick="goPage(${i})">${i}</button>`;
+  h+=`<button class="pg-btn" onclick="goPage(${curPage+1})">›</button>`;
+  $('pager').innerHTML=h;
+}
+window.goPage=function(p){ const t=Math.ceil(getFiltered().length/10); if(p<1||p>t)return; curPage=p; renderBoard(); mainArea.scrollTop=0; };
+
+function updateCounts(){
+  [...CATS,...CATS.flatMap(c=>c.sub||[])].forEach(c=>{
+    const el=$('cnt-'+c.id);
+    if(el) el.textContent=c.id==='전체'?allPosts.length:allPosts.filter(p=>p.cat===c.id).length;
+  });
+}
+
+function fmtDate(ts){
+  if(!ts) return '';
+  const d=ts.toDate?ts.toDate():new Date(ts), diff=Date.now()-d;
+  if(diff<60000) return '방금 전';
+  if(diff<3600000) return Math.floor(diff/60000)+'분 전';
+  if(diff<86400000) return Math.floor(diff/3600000)+'시간 전';
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function fmtShort(ts){ if(!ts) return ''; const d=ts.toDate?ts.toDate():new Date(ts); return `${d.getMonth()+1}/${d.getDate()}`; }
+
+// ── Home cards ──
+function loadHomeCards(){
+  ['음악'].forEach(cat=>{
+    onSnapshot(query(collection(db,'posts'),where('cat','==',cat),orderBy('createdAt','desc'),limit(5)),snap=>{
+      const el=$('h-'+cat); if(!el) return;
+      if(!snap.docs.length){el.innerHTML='<div class="home-empty">게시글이 없어요</div>';return;}
+      el.innerHTML=snap.docs.map(d=>{const p=d.data();return `<div class="hp-item" onclick="openPost('${d.id}')"><span class="hp-t">${p.title||''}</span><span class="hp-d">${fmtShort(p.createdAt)}</span></div>`;}).join('');
+    });
+  });
+
+  // 발레레벨 썸네일
+  onSnapshot(query(collection(db,'posts'),where('cat','in',LV_CATS),orderBy('createdAt','desc'),limit(4)),snap=>{
+    const el=$('h-레벨'); if(!el) return;
+    if(!snap.docs.length){el.innerHTML='<div class="home-empty">영상이 없어요</div>';return;}
+    el.innerHTML=`<div class="thumb-grid">${snap.docs.map(d=>{
+      const p=d.data(), id=ytId(p.content||'');
+      const thumb=id?`https://img.youtube.com/vi/${id}/mqdefault.jpg`:'';
+      return `<div class="thumb-item" onclick="openPost('${d.id}')">${thumb?`<img class="thumb-img" src="${thumb}">`:`<div class="thumb-ph">🩰</div>`}<div class="thumb-t">${p.title||''}</div></div>`;
+    }).join('')}</div>`;
+  });
+}
+
+// ── 발레소식 (NewsAPI) ──
+async function loadNews(){
+  const el=$('h-소식');
+  if(!el) return;
+  el.innerHTML='<div class="news-loading">뉴스 불러오는 중...</div>';
+
+  const proxy='https://api.allorigins.win/get?url=';
+  const feeds=[
+    'https://news.google.com/rss/search?q=발레&hl=ko&gl=KR&ceid=KR:ko',
+    'https://news.google.com/rss/search?q=ballet&hl=en&gl=US&ceid=US:en',
+  ];
+
+  let items=[];
+  for(const feed of feeds){
+    try{
+      const res=await fetch(proxy+encodeURIComponent(feed));
+      const data=await res.json();
+      const parser=new DOMParser();
+      const xml=parser.parseFromString(data.contents,'text/xml');
+      const entries=[...xml.querySelectorAll('item')].slice(0,4).map(item=>({
+        title: item.querySelector('title')?.textContent||'',
+        link: item.querySelector('link')?.textContent||'#',
+        pubDate: item.querySelector('pubDate')?.textContent||'',
+        source: item.querySelector('source')?.textContent||'뉴스',
+      }));
+      items=[...items,...entries];
+    }catch(e){}
+  }
+
+  items=items
+    .filter((v,i,a)=>v.title&&a.findIndex(t=>t.title===v.title)===i)
+    .sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate))
+    .slice(0,6);
+
+  if(items.length){
+    el.innerHTML=items.map(a=>`
+      <div class="news-item" onclick="window.open('${a.link}','_blank')">
+        <div class="news-title">${a.title.replace(/<[^>]*>/g,'')}</div>
+        <div class="news-source">${a.source} · ${a.pubDate?new Date(a.pubDate).toLocaleDateString('ko-KR'):''}</div>
+      </div>`).join('');
+  } else {
+    loadNewsFromDb(el);
+  }
+}
+
+function loadNewsFromDb(el){
+  onSnapshot(query(collection(db,'posts'),where('cat','==','소식'),orderBy('createdAt','desc'),limit(5)),snap=>{
+    if(!snap.docs.length){el.innerHTML='<div class="home-empty">발레소식이 없어요</div>';return;}
+    el.innerHTML=snap.docs.map(d=>{const p=d.data();return `<div class="hp-item" onclick="openPost('${d.id}')"><span class="hp-t">${p.title||''}</span><span class="hp-d">${fmtShort(p.createdAt)}</span></div>`;}).join('');
+  });
+}
+
+// ── Detail ──
+window.openPost=async function(id){
+  curPostId=id;
+  const p=allPosts.find(x=>x.id===id);
+  if(!p) return;
+  await updateDoc(doc(db,'posts',id),{views:increment(1)});
+  renderDetail(p);
+  loadComments(id);
+  showDetail();
+};
+
+function embedYt(text){
+  return text.replace(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/g,
+    (_,id)=>`<div class="yt-wrap"><iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"></iframe></div>`);
+}
+
+function renderDetail(p){
+  const body=embedYt((p.content||'').replace(/\n/g,'<br>'));
+  $('detailBox').innerHTML=`
+    <div class="detail-hd">${badge(p.cat)}<h1 class="detail-title">${p.title}</h1>
+      <div class="detail-meta"><span>✍ ${p.author||'익명'}</span><span>${fmtDate(p.createdAt)}</span><span>👁${p.views||0}</span><span>♥${p.likes||0}</span></div>
+    </div>
+    <div class="detail-body">${body}</div>
+    <div class="detail-actions">
+      <button class="like-btn" id="likeBtn" onclick="toggleLike('${p.id}')">♥ 좋아요 <span>${p.likes||0}</span></button>
+      ${isAdmin||curUser?.uid===p.uid?`<button class="btn-del" onclick="delPost('${p.id}')">🗑 삭제</button>`:''}
+    </div>`;
+}
+
+window.toggleLike=async function(id){
+  const btn=$('likeBtn'), liked=btn.classList.contains('liked');
+  btn.classList.toggle('liked');
+  await updateDoc(doc(db,'posts',id),{likes:increment(liked?-1:1)});
+  toast(liked?'좋아요 취소':'좋아요 💕');
+};
+
+window.delPost=async function(id){ if(!confirm('삭제?'))return; await deleteDoc(doc(db,'posts',id)); showBoard(); toast('삭제됐어요'); };
+
+// ── Comments ──
+function loadComments(pid){
+  onSnapshot(query(collection(db,'posts',pid,'comments'),orderBy('createdAt','asc')),snap=>{
+    renderComments(pid,snap.docs.map(d=>({id:d.id,...d.data()})));
+  });
+}
+function renderComments(pid,cmts){
+  const post=allPosts.find(p=>p.id===pid);
+  const isFree=FREE_CATS.includes(post?.cat);
+  const canCmt=curUser||isFree;
+  $('cmtBox').innerHTML=`
+    <div class="cmt-title">댓글 ${cmts.length}개</div>
+    ${cmts.map(c=>`<div class="cmt-item"><div class="cmt-hd"><span class="cmt-author">${c.author||'익명'}</span><span class="cmt-date">${fmtDate(c.createdAt)}${isAdmin||curUser?.uid===c.uid?`<button class="btn-del-cmt" onclick="delCmt('${pid}','${c.id}')">삭제</button>`:''}</span></div><div class="cmt-text">${(c.text||'').replace(/\n/g,'<br>')}</div></div>`).join('')||'<p class="no-cmt">첫 번째 댓글을 남겨보세요 🩰</p>'}
+    <div class="cmt-form">
+      ${isFree&&!curUser?`<input class="cmt-name" id="cmtName" placeholder="닉네임">`:''}
+      <div class="cmt-row">
+        <textarea class="cmt-inp" id="cmtText" placeholder="${canCmt?'댓글을 입력하세요...':'로그인 후 댓글 작성 가능'}"></textarea>
+        <button class="btn-primary" onclick="submitCmt('${pid}')">등록</button>
+      </div>
+      ${!canCmt?`<div class="login-hint">💡 <button class="btn-li" onclick="$('loginModal').classList.add('on')">로그인</button> 후 댓글 작성 가능</div>`:''}
+    </div>`;
+}
+window.submitCmt=async function(pid){
+  const post=allPosts.find(p=>p.id===pid);
+  const isFree=FREE_CATS.includes(post?.cat);
+  if(!curUser&&!isFree){toast('로그인이 필요해요');return;}
+  const text=$('cmtText')?.value.trim();
+  if(!text){toast('내용을 입력해주세요');return;}
+  const nm=$('cmtName');
+  const author=curUser?(curUser.displayName||'익명'):(nm?.value.trim()||'익명');
+  await addDoc(collection(db,'posts',pid,'comments'),{author,uid:curUser?.uid||null,text,createdAt:serverTimestamp()});
+  await updateDoc(doc(db,'posts',pid),{commentCount:increment(1)});
+  toast('댓글 등록됐어요 💬');
+};
+window.delCmt=async function(pid,cid){ if(!confirm('삭제?'))return; await deleteDoc(doc(db,'posts',pid,'comments',cid)); await updateDoc(doc(db,'posts',pid),{commentCount:increment(-1)}); };
+
+// ── Write ──
+function openWrite(){ $('writeModal').classList.add('on'); updateWriteUI(); }
+function closeWrite(){ $('writeModal').classList.remove('on'); }
+$('writeBtn').addEventListener('click',openWrite);
+$('writeBtn2').addEventListener('click',openWrite);
+$('writeClose').addEventListener('click',closeWrite);
+$('writeCancelBtn').addEventListener('click',closeWrite);
+$('goLoginBtn').addEventListener('click',()=>{ closeWrite(); $('loginModal').classList.add('on'); });
+
+$('newCat').addEventListener('change',updateWriteUI);
+function updateWriteUI(){
+  const cat=$('newCat').value, isFree=FREE_CATS.includes(cat);
+  $('nickWrap').style.display=isFree&&!curUser?'block':'none';
+  $('loginNotice').style.display=!isFree&&!curUser?'block':'none';
+}
+
+$('submitBtn').addEventListener('click',async()=>{
+  const cat=$('newCat').value, title=$('newTitle').value.trim(), content=$('newContent').value.trim();
+  const isFree=FREE_CATS.includes(cat);
+  if(!curUser&&!isFree){toast('로그인이 필요해요');return;}
+  if(!title||!content){toast('제목과 내용을 입력해주세요');return;}
+  const nm=$('newNick');
+  const author=curUser?(curUser.displayName||'익명'):(nm?.value.trim()||'익명');
+  await addDoc(collection(db,'posts'),{cat,title,author,uid:curUser?.uid||null,content,views:0,likes:0,commentCount:0,createdAt:serverTimestamp()});
+  closeWrite();
+  ['newTitle','newContent'].forEach(id=>{const el=$(id);if(el)el.value='';});
+  toast('글이 등록됐어요 🩰');
+  curCat=cat; showBoard();
+});
+
+// ── Concour ──
+window.showConcour=function(){ $('concourModal').classList.add('on'); };
+$('concourSbBtn').addEventListener('click',()=>$('concourModal').classList.add('on'));
+$('concourClose').addEventListener('click',()=>$('concourModal').classList.remove('on'));
+
+// ── Admin ──
+$('adminBtn').addEventListener('click',()=>{ if(isAdmin){renderAdmin();$('adminPanel').classList.add('on');}else $('adminModal').classList.add('on'); });
+$('adminClose').addEventListener('click',()=>$('adminModal').classList.remove('on'));
+$('adminCancelBtn').addEventListener('click',()=>$('adminModal').classList.remove('on'));
+$('adminLoginBtn').addEventListener('click',()=>{
+  if($('adminPw').value===ADMIN_PW){isAdmin=true;$('adminModal').classList.remove('on');renderAdmin();$('adminPanel').classList.add('on');toast('관리자 로그인 🔐');}else toast('비밀번호 오류');
+});
+$('adminLogoutBtn').addEventListener('click',()=>{ isAdmin=false; $('adminPanel').classList.remove('on'); toast('로그아웃'); });
+$('adminCloseBtn').addEventListener('click',()=>$('adminPanel').classList.remove('on'));
+
+function renderAdmin(){
+  $('adminBody').innerHTML=`
+    <div class="adm-stats">
+      <div class="adm-stat"><div class="adm-num">${allPosts.length}</div><div class="adm-lbl">전체 글</div></div>
+      <div class="adm-stat"><div class="adm-num">${allPosts.reduce((s,p)=>s+(p.views||0),0)}</div><div class="adm-lbl">조회수</div></div>
+      <div class="adm-stat"><div class="adm-num">${allPosts.reduce((s,p)=>s+(p.likes||0),0)}</div><div class="adm-lbl">좋아요</div></div>
+      <div class="adm-stat"><div class="adm-num">${allPosts.reduce((s,p)=>s+(p.commentCount||0),0)}</div><div class="adm-lbl">댓글</div></div>
+    </div>
+    <div class="adm-sec">최근 게시글</div>
+    ${allPosts.slice(0,30).map(p=>`
+      <div class="adm-post">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">${badge(p.cat)}<span style="font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="openPost('${p.id}');$('adminPanel').classList.remove('on')">${p.title}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#888"><span>${p.author||'익명'} · 👁${p.views||0} · ♥${p.likes||0}</span><button class="btn-dsm" onclick="delPost('${p.id}')">삭제</button></div>
+      </div>`).join('')}`;
+}
+
+// ── Search ──
+window.doSearch=function(){
+  const q=$('searchInp').value.trim(); if(!q) return;
+  curCat='전체'; showBoard();
+  const fil=allPosts.filter(p=>p.title?.includes(q)||p.content?.includes(q)||p.author?.includes(q));
+  $('boardTitle').textContent=`🔍 "${q}"`;
+  $('boardSub').textContent=`${fil.length}개`;
+  $('postList').innerHTML=fil.length?fil.map(p=>`<div class="post-item" onclick="openPost('${p.id}')"><div class="post-top">${badge(p.cat)}<span class="post-title">${p.title}</span></div><div class="post-meta"><span>${p.author||'익명'}</span><span>${fmtDate(p.createdAt)}</span></div></div>`).join(''):'<div class="empty-msg">검색 결과 없음</div>';
+  $('pager').innerHTML='';
+};
+
+// ── Toast ──
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),2500); }
+</script>
+</body>
+</html>
